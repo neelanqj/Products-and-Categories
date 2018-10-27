@@ -10,7 +10,10 @@ namespace Products_and_Categories.Models
         public int ProductId { get; set; }
         [Required]
         public string Name { get; set; }
-        public IEnumerable<Category> Categories { get; set; }
+
+        public string Description {get;set;}
+        public decimal Price { get;set; }
+        public List<ProductCategory> Categories { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }

@@ -14,7 +14,7 @@ namespace Products_and_Categories.Models
         public string Description { get; set; }
         [Required]
         public decimal Price { get; set; }
-        public IEnumerable<Product> Products { get; set; }
+        public List<ProductCategory> Products { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
