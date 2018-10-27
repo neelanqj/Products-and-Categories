@@ -36,9 +36,8 @@ namespace Products_and_Categories.Controllers
         [Route("/")]
         public IActionResult Index(ProductCategory elem)
         {
-            
             Category category = _dbContext.Categories
-                .Include(pc=>pc.Products)
+                .Include(pc=>pc.ProductCategory)
                 .ThenInclude(p=>p.Product)
                 .FirstOrDefault();
 

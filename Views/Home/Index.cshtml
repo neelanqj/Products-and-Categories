@@ -12,8 +12,8 @@
     <div class="col-md-6">
         <h2>Categories</h2>
         
-        @foreach(Product prod in @Model.Category.Products){
-            @prod.Name
+        @foreach(ProductCategory prod in @Model.Category.ProductCategory){
+            @prod.Product.Name
             @:<br/>
         }
     </div>
