@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Products_and_Categories.Models;
 using Products_and_Categories.Persistence;
 
@@ -17,15 +18,42 @@ namespace Products_and_Categories.Controllers
         }
 
         [HttpGet]
-        [Route("/products/{productid}")]
-        public IActionResult Index(Int productid)
+        [Route("/")]
+        public IActionResult Index()
         {
-            Product product = _dbContext.Products.Where(p => p.ProductId == productid)
-            .Include(p=>p.Categories)
+            Category category = _dbContext.Categories
+            //.Include(p=>p.Categories)
             .FirstOrDefault();
-            ProductViewModel vm = new ProductViewModel();
-            vm.Product = product;
-            vm.Categories = _dbContext.Categories.ToList();
+            CategoryViewModel vm = new CategoryViewModel();
+            vm.Category = category;
+            vm.Products = _dbContext.Products.ToList();
+            
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [Route("/")]
+        public IActionResult Index(ProductCategory elem)
+        {
+            
+            Category category = _dbContext.Categories
+                .Include(pc=>pc.Products)
+                .ThenInclude(p=>p.Product)
+                .FirstOrDefault();
+
+            CategoryViewModel vm = new CategoryViewModel();
+            vm.Category = category;
+            vm.Products = _dbContext.Products.ToList();
+            
+            if(!ModelState.IsValid) 
+                return View(vm);
+
+            if(_dbContext.ProductCategory.Any(p => p.ProductId == elem.ProductId && p.CategoryId == elem.CategoryId)) 
+                return View(vm);
+
+            _dbContext.ProductCategory.Add(elem);
+            _dbContext.SaveChanges();
 
             return View(vm);
         }
