@@ -18,17 +18,16 @@
         }
     </div>
     <div class="col-md-6">
-        @model ProductCategory
         <form action="/" method="POST">
             <input type="hidden" name="CategoryId" value="@Model.Category.CategoryId" />
             Add Category:<br/>
             <select name="ProductId" >
-            @foreach(Product prod in @Model.Products){
-                @:<option value="@prod.ProductId
-                @:">
-                @prod.Name
-                @:</option>
-            }
+                @foreach(Product prod in @Model.Products){
+                    @:<option value="@prod.ProductId
+                    @:">
+                    @prod.Name
+                    @:</option>
+                }
             </select>
             <input type="submit" value="Add" />
         </form>

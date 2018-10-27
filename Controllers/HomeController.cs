@@ -22,13 +22,11 @@ namespace Products_and_Categories.Controllers
         public IActionResult Index()
         {
             Category category = _dbContext.Categories
-            //.Include(p=>p.Categories)
             .FirstOrDefault();
             CategoryViewModel vm = new CategoryViewModel();
             vm.Category = category;
             vm.Products = _dbContext.Products.ToList();
             
-
             return View(vm);
         }
 
