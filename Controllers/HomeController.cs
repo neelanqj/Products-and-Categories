@@ -22,18 +22,44 @@ namespace Products_and_Categories.Controllers
         }
 
         [HttpGet]
+        [Route("/products")]
         public IActionResult CreateProduct()
         {
-            return View();
+            CreateProductViewModel vm = new CreateProductViewModel();
+            vm.Products = _dbContext.Products;
+            return View(vm);
         }
 
         [HttpPost]
-        public IActionResult CreateProduct(Product product)
+        [Route("/products")]
+        public IActionResult CreateProduct(CreateProductViewModel vm)
         {
             if(!ModelState.IsValid) 
                 return View();
 
-            _dbContext.Add(product);
+            _dbContext.Add(vm.Product);
+            _dbContext.SaveChanges();
+
+            return View();
+        }
+
+        [HttpGet]
+        [Route("/categories")]
+        public IActionResult CreateCategory()
+        {
+            CreateCategoryViewModel vm = new CreateCategoryViewModel();
+            vm.Categories = _dbContext.Categories;
+            return View(vm);
+        }
+
+        [HttpPost]
+        [Route("/categories")]
+        public IActionResult CreateCategory(CreateCategoryViewModel vm)
+        {
+            if(!ModelState.IsValid) 
+                return View();
+
+            _dbContext.Add(vm.Category);
             _dbContext.SaveChanges();
 
             return View();
