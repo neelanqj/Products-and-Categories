@@ -16,9 +16,18 @@ namespace Products_and_Categories.Controllers
             _dbContext = context;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        [Route("/products/{productid}")]
+        public IActionResult Index(Int productid)
         {
-            return View();
+            Product product = _dbContext.Products.Where(p => p.ProductId == productid)
+            .Include(p=>p.Categories)
+            .FirstOrDefault();
+            ProductViewModel vm = new ProductViewModel();
+            vm.Product = product;
+            vm.Categories = _dbContext.Categories.ToList();
+
+            return View(vm);
         }
 
         [HttpGet]

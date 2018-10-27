@@ -13,7 +13,7 @@ namespace Products_and_Categories.Models
 
         public string Description {get;set;}
         public decimal Price { get;set; }
-        public List<ProductCategory> Categories { get; set; }
+        public List<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
