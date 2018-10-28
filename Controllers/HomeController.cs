@@ -22,9 +22,9 @@ namespace Products_and_Categories.Controllers
         public IActionResult Index()
         {
             Category category = _dbContext.Categories
-            .Include(c=>c.ProductCategory)
-            .ThenInclude(c=>c.Category)
-            .FirstOrDefault();
+                .Include(c=>c.ProductCategory)
+                .ThenInclude(c=>c.Category)
+                .FirstOrDefault();
             CategoryViewModel vm = new CategoryViewModel();
             vm.Category = category;
             vm.Products = _dbContext.Products.ToList();
@@ -105,9 +105,10 @@ namespace Products_and_Categories.Controllers
             if(!ModelState.IsValid) 
                 return View(vm);
 
+
+            vm.Products = _dbContext.Products;
             _dbContext.Add(vm.Product);
             _dbContext.SaveChanges();
-            vm.Products = _dbContext.Products;
 
             return View(vm);
         }
@@ -128,10 +129,11 @@ namespace Products_and_Categories.Controllers
             if(!ModelState.IsValid) 
                 return View();
 
+            vm.Categories = _dbContext.Categories;
             _dbContext.Add(vm.Category);
             _dbContext.SaveChanges();
 
-            return View();
+            return View(vm);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
