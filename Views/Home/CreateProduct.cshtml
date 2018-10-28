@@ -30,8 +30,9 @@
     <div class="col-md-6">
         <h2>Existing Products</h2>
         @foreach(Product product in @Model.Products) {
+            @:<a href="/products/@product.ProductId">
             @product.Name
-            @:<br/>
+            @:</a><br/>
         }
 
     </div>

@@ -24,8 +24,9 @@
     <div class="col-md-6">
         <h2>Existing Categories</h2>
         @foreach(Category category in @Model.Categories) {
+            @:<a href="/categories/@category.CategoryId">
             @category.Name
-            @:<br/>
+            @:</a><br/>
         }
     </div>
 </div>

@@ -32,19 +32,21 @@ namespace Products_and_Categories.Controllers
             return View(vm);
         }
 
-        // [HttpGet]
-        // [Route("/{categoryid}")]
-        // public IActionResult Index(int categoryid)
-        // {
-        //     Category category = _dbContext.Categories
-        //     .Where(c=>c.CategoryId==categoryid)
-        //     .FirstOrDefault();
-        //     CategoryViewModel vm = new CategoryViewModel();
-        //     vm.Category = category;
-        //     vm.Products = _dbContext.Products.ToList();
+        [HttpGet]
+        [Route("/categories/{categoryid}")]
+        public IActionResult Index(int categoryid)
+        {
+            Category category = _dbContext.Categories
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Product)
+            .Where(c=>c.CategoryId==categoryid)
+            .FirstOrDefault();
+            CategoryViewModel vm = new CategoryViewModel();
+            vm.Category = category;
+            vm.Products = _dbContext.Products.ToList();
             
-        //     return View(vm);
-        // }
+            return View(vm);
+        }
 
         [HttpPost]
         [Route("/")]
@@ -80,6 +82,8 @@ namespace Products_and_Categories.Controllers
         public IActionResult ShowProduct(int productid)
         {
            Product product = _dbContext.Products
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Category)
                 .Where(c=>c.ProductId==productid)
                 .FirstOrDefault();
             ProductViewModel vm = new ProductViewModel();
@@ -94,7 +98,9 @@ namespace Products_and_Categories.Controllers
         public IActionResult CreateProduct()
         {
             CreateProductViewModel vm = new CreateProductViewModel();
-            vm.Products = _dbContext.Products;
+            vm.Products = _dbContext.Products
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Category);
             return View(vm);
         }
 
@@ -106,7 +112,9 @@ namespace Products_and_Categories.Controllers
                 return View(vm);
 
 
-            vm.Products = _dbContext.Products;
+            vm.Products = _dbContext.Products
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Category);
             _dbContext.Add(vm.Product);
             _dbContext.SaveChanges();
 
@@ -118,7 +126,9 @@ namespace Products_and_Categories.Controllers
         public IActionResult CreateCategory()
         {
             CreateCategoryViewModel vm = new CreateCategoryViewModel();
-            vm.Categories = _dbContext.Categories;
+            vm.Categories = _dbContext.Categories
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Product);
             return View(vm);
         }
 
@@ -129,7 +139,9 @@ namespace Products_and_Categories.Controllers
             if(!ModelState.IsValid) 
                 return View();
 
-            vm.Categories = _dbContext.Categories;
+            vm.Categories = _dbContext.Categories
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Product);
             _dbContext.Add(vm.Category);
             _dbContext.SaveChanges();
 

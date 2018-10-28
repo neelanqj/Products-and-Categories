@@ -99,7 +99,7 @@ using Products_and_Categories.Models;
             WriteLiteral("    </div>\r\n    <div class=\"col-md-6\">\r\n        ");
             EndContext();
             BeginContext(442, 505, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "36b6079c06504109b58de0add6b13e0c", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "39f1d1edc71c45daba581e84190107ef", async() => {
                 BeginContext(473, 52, true);
                 WriteLiteral("\r\n            <input type=\"hidden\" name=\"CategoryId\"");
                 EndContext();
