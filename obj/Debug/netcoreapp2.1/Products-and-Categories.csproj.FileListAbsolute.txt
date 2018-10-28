@@ -28,3 +28,4 @@ C:\Storage\C\Products-and-Categories\bin\Debug\netcoreapp2.1\Products-and-Catego
 C:\Storage\C\Products-and-Categories\obj\Debug\netcoreapp2.1\Products-and-Categories.Views.pdb
 C:\Storage\C\Products-and-Categories\obj\Debug\netcoreapp2.1\Products-and-Categories.csproj.CopyComplete
 C:\Storage\C\Products-and-Categories\obj\Debug\netcoreapp2.1\Razor\Views\Home\CreateCategory.g.cshtml.cs
+C:\Storage\C\Products-and-Categories\obj\Debug\netcoreapp2.1\Razor\Views\Home\ShowProduct.g.cshtml.cs

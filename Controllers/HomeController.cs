@@ -22,6 +22,8 @@ namespace Products_and_Categories.Controllers
         public IActionResult Index()
         {
             Category category = _dbContext.Categories
+            .Include(c=>c.ProductCategory)
+            .ThenInclude(c=>c.Category)
             .FirstOrDefault();
             CategoryViewModel vm = new CategoryViewModel();
             vm.Category = category;
@@ -29,6 +31,20 @@ namespace Products_and_Categories.Controllers
             
             return View(vm);
         }
+
+        // [HttpGet]
+        // [Route("/{categoryid}")]
+        // public IActionResult Index(int categoryid)
+        // {
+        //     Category category = _dbContext.Categories
+        //     .Where(c=>c.CategoryId==categoryid)
+        //     .FirstOrDefault();
+        //     CategoryViewModel vm = new CategoryViewModel();
+        //     vm.Category = category;
+        //     vm.Products = _dbContext.Products.ToList();
+            
+        //     return View(vm);
+        // }
 
         [HttpPost]
         [Route("/")]
@@ -50,8 +66,26 @@ namespace Products_and_Categories.Controllers
                 return View(vm);
 
             _dbContext.ProductCategory.Add(elem);
+            category.ProductCategory.Add(elem);
+            Product product = _dbContext.Products.Where(p=>p.ProductId == elem.ProductId).FirstOrDefault();
+            product.ProductCategory.Add(elem);
             _dbContext.SaveChanges();
 
+            return View(vm);
+        }
+
+
+        [HttpGet]
+        [Route("/products/{productid}")]
+        public IActionResult ShowProduct(int productid)
+        {
+           Product product = _dbContext.Products
+                .Where(c=>c.ProductId==productid)
+                .FirstOrDefault();
+            ProductViewModel vm = new ProductViewModel();
+            vm.Product = product;
+            vm.Categories = _dbContext.Categories.ToList();
+            
             return View(vm);
         }
 
@@ -69,12 +103,13 @@ namespace Products_and_Categories.Controllers
         public IActionResult CreateProduct(CreateProductViewModel vm)
         {
             if(!ModelState.IsValid) 
-                return View();
+                return View(vm);
 
             _dbContext.Add(vm.Product);
             _dbContext.SaveChanges();
+            vm.Products = _dbContext.Products;
 
-            return View();
+            return View(vm);
         }
 
         [HttpGet]
