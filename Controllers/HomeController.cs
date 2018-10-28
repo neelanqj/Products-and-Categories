@@ -23,27 +23,36 @@ namespace Products_and_Categories.Controllers
         {
             Category category = _dbContext.Categories
                 .Include(c=>c.ProductCategory)
-                .ThenInclude(c=>c.Category)
+                .ThenInclude(c=>c.Product)
                 .FirstOrDefault();
             CategoryViewModel vm = new CategoryViewModel();
             vm.Category = category;
-            vm.Products = _dbContext.Products.ToList();
+            
+            vm.Products = _dbContext.Products
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Category)
+                .Where(p=>!category.ProductCategory.Any(i => p.ProductId == i.ProductId)).ToList();
             
             return View(vm);
         }
 
         [HttpGet]
-        [Route("/categories/{categoryid}")]
+        [Route("/{categoryid}")]
         public IActionResult Index(int categoryid)
         {
             Category category = _dbContext.Categories
                 .Include(pc=>pc.ProductCategory)
                 .ThenInclude(p=>p.Product)
-            .Where(c=>c.CategoryId==categoryid)
-            .FirstOrDefault();
+                .Where(c=>c.CategoryId==categoryid)
+                .FirstOrDefault();
             CategoryViewModel vm = new CategoryViewModel();
+
             vm.Category = category;
-            vm.Products = _dbContext.Products.ToList();
+            vm.Products = _dbContext.Products
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Category)
+                .Where(p=>!category.ProductCategory.Any(i => p.ProductId == i.ProductId))
+                .ToList();
             
             return View(vm);
         }
@@ -55,11 +64,11 @@ namespace Products_and_Categories.Controllers
             Category category = _dbContext.Categories
                 .Include(pc=>pc.ProductCategory)
                 .ThenInclude(p=>p.Product)
+                .Where(c=>c.CategoryId == elem.CategoryId)
                 .FirstOrDefault();
 
             CategoryViewModel vm = new CategoryViewModel();
             vm.Category = category;
-            vm.Products = _dbContext.Products.ToList();
             
             if(!ModelState.IsValid) 
                 return View(vm);
@@ -69,8 +78,16 @@ namespace Products_and_Categories.Controllers
 
             _dbContext.ProductCategory.Add(elem);
             category.ProductCategory.Add(elem);
-            Product product = _dbContext.Products.Where(p=>p.ProductId == elem.ProductId).FirstOrDefault();
+            Product product = _dbContext.Products
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Category)
+                .Where(p=>p.ProductId == elem.ProductId).FirstOrDefault();
             product.ProductCategory.Add(elem);
+            vm.Products = _dbContext.Products
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Category)
+                .Where(p=>!category.ProductCategory.Any(i => p.ProductId == i.ProductId)).ToList();
+
             _dbContext.SaveChanges();
 
             return View(vm);
@@ -88,7 +105,10 @@ namespace Products_and_Categories.Controllers
                 .FirstOrDefault();
             ProductViewModel vm = new ProductViewModel();
             vm.Product = product;
-            vm.Categories = _dbContext.Categories.ToList();
+            vm.Categories = _dbContext.Categories
+                .Include(pc=>pc.ProductCategory)
+                .ThenInclude(p=>p.Product)
+            .Where(p=>!product.ProductCategory.Any(i => p.CategoryId == i.CategoryId)).ToList();
             
             return View(vm);
         }
@@ -111,7 +131,6 @@ namespace Products_and_Categories.Controllers
             if(!ModelState.IsValid) 
                 return View(vm);
 
-
             vm.Products = _dbContext.Products
                 .Include(pc=>pc.ProductCategory)
                 .ThenInclude(p=>p.Category);
@@ -131,6 +150,22 @@ namespace Products_and_Categories.Controllers
                 .ThenInclude(p=>p.Product);
             return View(vm);
         }
+
+        // [HttpGet]
+        // [Route("/categories/{categoryid}")]
+        // public IActionResult CreateCategory(int categoryid)
+        // {
+        //     CreateCategoryViewModel vm = new CreateCategoryViewModel();
+        //     vm.Category = _dbContext.Categories
+        //         .Include(pc=>pc.ProductCategory)
+        //         .ThenInclude(p=>p.Product)
+        //         .Where(c=>c.CategoryId == categoryid)
+        //         .FirstOrDefault();
+        //     vm.Categories = _dbContext.Categories
+        //         .Include(pc=>pc.ProductCategory)
+        //         .ThenInclude(p=>p.Product);
+        //     return View(vm);
+        // }
 
         [HttpPost]
         [Route("/categories")]
